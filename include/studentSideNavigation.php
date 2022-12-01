@@ -6,7 +6,7 @@
             if ($page != "home") {
                echo " collapsed";
             }
-            ?>" href="home.php">
+            ?>" href="student_dashboard.php">
             <i class='bx bxs-dashboard'></i>
             <span>Dashboard</span>
          </a>

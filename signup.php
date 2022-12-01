@@ -88,52 +88,52 @@ include 'lib/signup.lib.php';
                             <fieldset>
                                 <div class="row mb-2">
                                     <div class="col-sm-5 col-md-6 mb-2">
-                                        <div class="form-floating">
-                                            <input type="text" name="firstname" class="form-control" placeholder=" " required />
+                                        <div class="form-group">
                                             <label for="firstname">Firstname</label>
+                                            <input type="text" name="firstname" class="form-control" placeholder="Enter Firstname" required />
                                         </div>
                                     </div>
                                     <div class="col-sm-5 col-md-6 mb-2">
-                                        <div class="form-floating">
-                                            <input type="text" name="lastname" class="form-control" placeholder=" " required />
+                                        <div class="form-group">
                                             <label for="lastname">Lastname</label>
+                                            <input type="text" name="lastname" class="form-control" placeholder="Enter Lastname" required />
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-floating mb-2">
-                                    <input type="middlename" name="middlename" class="form-control" placeholder=" " />
+                                <div class="form-group mb-2">
                                     <label for="middlename">Middlename</label>
+                                    <input type="middlename" name="middlename" class="form-control" placeholder="Enter Middlename" />
                                 </div>
-                                <div class="form-floating mb-2">
+                                <div class="form-group mb-2">
+                                    <label for="position">Position</label>
                                     <select name="position" id="position" class="form-select form-control">
                                         <option value="" selected disabled>--Select Position--</option>
                                         <option id="position-option" value="Student">Student</option>
                                         <option id="position-option" value="Instructor">Instructor</option>
                                     </select>
-                                    <label for="position">Position</label>
                                 </div>
-                                <div class="form-floating mb-2">
+                                <div class="form-group mb-2">
+                                    <label for="department">Department</label>
                                     <select name="department" id="department" class="form-select form-control">
                                         <option value="" selected disabled>--Select Department--</option>
                                         <option id="department-option" value="BSIT">BSIT</option>
                                     </select>
-                                    <label for="department">Department</label>
                                 </div>
-                                <div class="form-floating mb-2">
-                                    <input type="username" name="username" class="form-control" placeholder=" " required />
+                                <div class="form-group mb-2">
                                     <label for="username">Username</label>
+                                    <input type="username" name="username" class="form-control" placeholder="Enter Username" required />
                                 </div>
-                                <div class="form-floating mb-2">
-                                    <input type="email" name="email" class="form-control" placeholder=" " required />
+                                <div class="form-group mb-2">
                                     <label for="email">Email</label>
+                                    <input type="email" name="email" class="form-control" placeholder="email@example.com" required />
                                 </div>
-                                <div class="form-floating mb-2">
-                                    <input id="password" type="password" name="password" class="form-control" placeholder=" " required />
+                                <div class="form-group mb-2">
                                     <label for="password">Password</label>
+                                    <input id="password" type="password" name="password" class="form-control" placeholder="enter your passsword" required />
                                 </div>
-                                <div class="form-floating mb-3">
-                                    <input type="password" name="confirm_password" class="form-control" placeholder=" " required />
+                                <div class="form-group mb-3">
                                     <label for="confirm_password">Confirm Password</label>
+                                    <input type="password" name="confirm_password" class="form-control" placeholder="repeat passsword" required />
                                 </div>
 
                                 <input name="btn_signup" id="signup" class="btn btn-block login-btn" type="submit" value="Signup" />

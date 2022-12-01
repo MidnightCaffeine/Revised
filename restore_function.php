@@ -1,7 +1,6 @@
 <?php include_once 'lib/connection.php';
 session_start();
-include 'lib/student/addStudent.php';
-$page = "home";
+$page = "restore";
 
 ?>
 
@@ -11,7 +10,7 @@ $page = "home";
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Home</title>
+    <title>Restore</title>
     <meta name="robots" content="noindex, nofollow">
     <meta content="" name="description">
     <meta content="" name="keywords">
@@ -53,7 +52,7 @@ $page = "home";
                     <li class="breadcrumb-item active">Backup</li>
                 </ol>
             </nav>
-            <a href="../backupAndRestore.php" type="button" class="btn btn-primary mb-2"><i class='bx bx-arrow-back'></i>Back</a>
+            <a href="backupAndRestore.php" type="button" class="btn btn-primary mb-2"><i class='bx bx-arrow-back'></i>Back</a>
         </div>
         <section class="section dashboard">
             <div class="row">
@@ -71,7 +70,7 @@ $page = "home";
                 define("DB_USER", 'root');
                 define("DB_PASSWORD", '');
                 define("DB_NAME", 'rfid_attendance');
-                define("DB_HOST", '127.0.0.1:3307');
+                define("DB_HOST", 'localhost');
                 define("BACKUP_DIR", 'lib/myphp-backup-files'); // Comment this line to use same script's directory ('.')
                 define("BACKUP_FILE", 'myphp-backup-rfid_attendance.sql.gz'); // Script will autodetect if backup file is gzipped based on .gz extension
                 define("CHARSET", 'utf8');

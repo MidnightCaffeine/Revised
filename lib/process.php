@@ -7,6 +7,7 @@ $t = date("h:i:s A");
 $remark = array("On Time", "Late", "Absent");
 
 require __DIR__ . '../../vendor/autoload.php';
+
 use Twilio\Rest\Client;
 
 // Your Account SID and Auth Token from twilio.com/console
@@ -56,7 +57,7 @@ while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
 			}
 			$update = $pdo->prepare("UPDATE `attendance` SET `time_out` = '$t' WHERE `attendance`.`fullname` = '$fullname' AND `date_in` = '$d' AND `id` = '$ids' ");
 			$update->execute();
-
+			echo "success";
 		} elseif ($t >= date('H:i:s', strtotime($teacher_login . ' +15 minutes'))) { //login
 			$insert = $pdo->prepare("INSERT INTO `attendance`(`fullname`, `date_in`, `time_in`, `time_out`, `remark` ,`instructor`) VALUES (:fullname, :d, :t, '0', :remark,:instructor)");
 			$insert->bindParam(":fullname", $fullname);
@@ -65,7 +66,7 @@ while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
 			$insert->bindParam(":remark", $remark[1]);
 			$insert->bindParam(":instructor", $current_instructor);
 			$insert->execute();
-
+			echo "success";
 		} elseif ($t < date('H:i:s', strtotime($teacher_login . ' +15 minutes'))) { //login
 			$insert = $pdo->prepare("INSERT INTO `attendance`(`fullname`, `date_in`, `time_in`,`time_out`,`remark`,`instructor`) VALUES (:fullname, :d, :t, '0',:remark,:instructor)");
 			$insert->bindParam(":fullname", $fullname);
@@ -75,22 +76,7 @@ while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
 			$insert->bindParam(":instructor", $current_instructor);
 			$insert->execute();
 
-			$smsNotif = $client->messages->create(
-				// Where to send a text message (your cell phone?)
-				'+639163218023',
-				array(
-					'from' => $twilio_number,
-					'body' => 'I sent this message in under 10 minutes!'
-				)
-			);
-
-			if($smsNotif){
-				echo 'message sent';
-			}else{
-				echo 'failed';
-			}
-
-
+			echo "success";
 		} else {
 			echo "error";
 		}
@@ -114,18 +100,22 @@ while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
 				$ids = $row["id"];
 			}
 			$update = $pdo->prepare("UPDATE `attendance_instructor` SET `time_out` = '$t' WHERE `attendance_instructor`.`fullname` = '$fullname' AND `date_in` = '$d' AND `id` = '$ids' ");
-			$update->execute();
-
-			$selectAbsent = $pdo->prepare("SELECT * FROM student_list");
-			if ($selectAbsent->execute()) {
+			if ($update->execute()) {
+				$selectAbsent = $pdo->prepare("SELECT * FROM student_list");
+				$selectAbsent->execute();
 				while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
 					$ids = $row["id"];
-					$studentName = $row["student_firstname"] . " " . $row["student_middlename"] . " " . $row["student_lastname"];
 
-					$getAttendanceList = $pdo->prepare("SELECT * FROM attendance WHERE fullname='$studentName' ");
+					$slname = $row["student_firstname"];
+					$smname = $row["student_middlename"];
+					$ssname = $row["student_lastname"];
+
+					$studentName = $slname . " " . $smname . " " . $ssname;
+
+					$getAttendanceList = $pdo->prepare("SELECT * FROM attendance WHERE fullname='$studentName' AND date_in='$d' AND time_out='0'");
 					$getAttendanceList->execute();
 
-					if ($getAttendanceList->rowCount() < 1) {
+					if ($getAttendanceList->rowCount() < 0) {
 
 						$d = 0;
 
@@ -136,17 +126,13 @@ while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
 						$insert->bindParam(":remark", $remark[2]);
 						$insert->bindParam(":instructor", $fullname);
 						$insert->execute();
+					} elseif (($getAttendanceList->rowCount() > 0)) {
 
-						
-					}elseif(($getAttendanceList->rowCount() >= 1 && $row['time_out'] == '0')){
-
-						$update = $pdo->prepare("UPDATE `attendance` SET `time_out` = '$t' WHERE `attendance`.`fullname` = '$studentName' AND `date_in` = '$d' AND `id` = '$ids' ");
+						$update = $pdo->prepare("UPDATE `attendance` SET `time_out` = '$t' WHERE `attendance`.`fullname` = '$studentName' AND `date_in` = '$d'");
 						$update->execute();
-
-
-					}else {
+					} else {
 						echo "success";
-				}
+					}
 				}
 			}
 		} else { //login
@@ -160,7 +146,6 @@ while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
 			if ($selectStudents->execute()) {
 				while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
 					$phone = $row["phone"];
-					
 				}
 			}
 			echo "success";

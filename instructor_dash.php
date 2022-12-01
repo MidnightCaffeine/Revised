@@ -64,14 +64,14 @@ $name = $_SESSION['fullname'];
       <section class="section dashboard">
          <div class="row">
             <div class="col-lg-8">
-               <h5 class="card-title">My Attendance Report Summary</h5>
+               <h5 class="card-title">Student Attendance Report Summary</h5>
                <div class="row">
                   <div class="col-xxl-4 col-md-6">
                      <div class="card info-card ontime-card">
                         <div class="card-body">
                            <h5 class="card-title">On Time Students Count</span></h5>
                            <?php
-                           $countStudent = $pdo->prepare("SELECT * FROM `attendance` WHERE fullname='$name' AND remark='On Time' ");
+                           $countStudent = $pdo->prepare("SELECT * FROM `attendance` WHERE remark='On Time' AND date_in='$d' ");
                            $countStudent->execute();
 
                            $count = 0;
@@ -94,7 +94,7 @@ $name = $_SESSION['fullname'];
                         <div class="card-body">
                            <h5 class="card-title">My Late Count</span></h5>
                            <?php
-                           $countInstructor = $pdo->prepare("SELECT * FROM `attendance` WHERE fullname='$name' AND remark='Late'");
+                           $countInstructor = $pdo->prepare("SELECT * FROM `attendance` WHERE remark='Late' AND date_in='$d'");
                            $countInstructor->execute();
 
                            $count = 0;
@@ -117,7 +117,7 @@ $name = $_SESSION['fullname'];
                         <div class="card-body">
                            <h5 class="card-title">Absent Student Count</span></h5>
                            <?php
-                           $countCard = $pdo->prepare("SELECT * FROM `attendance` WHERE fullname='$name' AND remark='Absent' ");
+                           $countCard = $pdo->prepare("SELECT * FROM `attendance` WHERE remark='Absent' AND date_in='$d' ");
                            $countCard->execute();
 
                            $count = 0;
@@ -144,7 +144,7 @@ $name = $_SESSION['fullname'];
                      <div class="activity">
                         <?php
                         $username = $_SESSION["username"];
-                        $userlog = $pdo->prepare("SELECT * FROM `user_log` WHERE `user` = '$username' ORDER BY user_log_id DESC limit 10");
+                        $userlog = $pdo->prepare("SELECT * FROM `user_log` WHERE `user` != 'admin' ORDER BY user_log_id DESC limit 10");
                         $userlog->execute();
                         while ($row = $userlog->fetch(PDO::FETCH_ASSOC)) {
 

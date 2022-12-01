@@ -18,7 +18,7 @@ $page = "rfid_card";
    <link href="https://fonts.gstatic.com" rel="preconnect">
    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
    <link href="assets/css/bootstrap.min.css" rel="stylesheet" rel="stylesheet">
-   <link href="assets/css/dataTables.bootstrap5.min.css">
+   <link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap5.min.css">
    <link href="assets/css/bootstrap-icons.css" rel="stylesheet">
    <link href="assets/css/boxicons.min.css" rel="stylesheet">
    <link href="assets/css/quill.snow.css" rel="stylesheet">
@@ -26,6 +26,7 @@ $page = "rfid_card";
    <link href="assets/css/remixicon.css" rel="stylesheet">
    <link href="assets/css/style.css" rel="stylesheet">
    <link href="assets/css/toastr.css" rel="stylesheet">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 
 <body>
@@ -37,23 +38,6 @@ $page = "rfid_card";
       include 'include/instructorSideNavigation.php';
    } elseif ($_SESSION["position"] == "Student") {
       include 'include/studentSideNavigation.php';
-   }
-
-   if ($_SESSION['status'] ==  "usuccess") {
-      echo '<script type="text/javascript">
-      toastr.success("Chages are saved Successfully")
-      </script>';
-      $_SESSION['status'] = "";
-   } elseif ($_SESSION['status'] ==  "asuccess") {
-      echo '<script type="text/javascript">
-      toastr.success("Added Successfully")
-      </script>';
-      $_SESSION['status'] = "";
-   } elseif ($_SESSION['status'] ==  "dsuccess") {
-      echo '<script type="text/javascript">
-      toastr.success("Deleted Successfully")
-      </script>';
-      $_SESSION['status'] = "";
    }
 
    ?>
@@ -110,10 +94,11 @@ $page = "rfid_card";
                            <a type="button" class="btn btn-primary ms-auto" href="editCard.php?id=<?php echo $row["card_id"]; ?>" data-toggle="tooltip" title="Edit"><i class="bi bi-pencil-square"></i></a>
                         </td>
                         <td>
-                           <form action="lib/student/deleteCard.php" method="post">
-                              <input type="hidden" name="id" value="<?php echo $row['card_id'] ?>">
-                              <button type="submit" name="delete" class="btn btn-danger" data-toggle="tooltip" title="Delete"><i class="bi bi-trash"></i></button>
-                           </form>
+                           <?php
+                           $stdId = $row['card_id'];
+                           ?>
+                           <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCard" data-toggle="tooltip" title="Delete"><i class="bi bi-trash"></i></button>
+
                         </td>
                      </tr> <?php }
                            ?>
@@ -164,29 +149,80 @@ $page = "rfid_card";
    </div>
 
    <script type="text/javascript" charset="utf8" src="assets/js/jquery-3.4.1.min.js"></script>
-   <script src="assets/js/bootstrap.bundle.min.js"></script>
    <script src="assets/js/jquery.validate.js"></script>
    <script type="text/javascript" charset="utf8" src="assets/js/datatable.js"></script>
    <script type="text/javascript" charset="utf8" src="assets/js/dataTables.bootstrap5.min.js"></script>
+   <script src="assets/js/bootstrap.bundle.min.js"></script>
    <script src="assets/js/apexcharts.min.js"></script>
    <script src="assets/js/chart.min.js"></script>
    <script src="assets/js/echarts.min.js"></script>
    <script src="assets/js/quill.min.js"></script>
+   <script src="assets/js/tinymce.min.js"></script>
    <script src="assets/js/main.js"></script>
    <script src="assets/js/toastr.min.js"></script>
    <script>
-         $('#cardTable').DataTable({
-            pagingType: 'full_numbers',
-            responsive: true,
-            columnDefs: [{
-               'targets': [1, 2, 3, 4, 5],
-               /* column index */
+      $('#cardTable').DataTable({
+         pagingType: 'full_numbers',
+         responsive: true,
+         columnDefs: [{
+            'targets': [1, 2, 3, 4, 5],
+            /* column index */
 
-               'orderable': false,
-               /* true or false */
-            }, ],
-         });
+            'orderable': false,
+            /* true or false */
+         }, ],
+      });
    </script>
+
+
+   <?php
+
+   if ($_SESSION['status'] ==  "usuccess") { ?>
+
+      <script type="text/javascript">
+         toastr.success("Chages are saved Successfully");
+      </script>
+
+   <?php
+   } elseif ($_SESSION['status'] ==  "asuccess") { ?>
+
+      <script type="text/javascript">
+         toastr.success("Added Successfully");
+      </script>
+
+   <?php
+   } elseif ($_SESSION['status'] ==  "dsuccess") { ?>
+      <script type="text/javascript">
+         toastr.success("Deleted Successfully");
+      </script>
+   <?php
+   }
+   $_SESSION['status'] = '';
+   ?>
+
+   <!-- Modal HTML -->
+   <div id="deleteCard" class="modal fade">
+      <div class="modal-dialog modal-confirm  modal-dialog-centered">
+         <div class="modal-content">
+            <div class="modal-header flex-column">
+               <div class="icon-box">
+                  <i class="material-icons">&#xE5CD;</i>
+               </div>
+               <h4 class="modal-title w-100">Are you sure?</h4>
+            </div>
+            <div class="modal-body">
+               <p>Do you really want to delete these records? This process cannot be undone.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+               <form action="lib/card/deleteCard.php" method="post">
+                  <input type="hidden" name="id" value="<?php echo $stdId; ?>">
+                  <button type="submit" name="deleteCardbtn" class="btn btn-danger">Delete</button>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
 
 </body>
 

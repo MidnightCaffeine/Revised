@@ -1,0 +1,120 @@
+<?php
+date_default_timezone_set('Asia/Manila');
+$d = date("Y-m-d");
+$t = date("h:i:s A");
+$action = 'Register';
+if (isset($_POST['btn_addStudent'])) {
+
+    $firstname = ucwords(strtolower($_POST['firstname']));
+    $lastname = ucwords(strtolower($_POST['lastname']));
+    $middlename = ucwords(strtolower($_POST['middlename']));
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $position = $_POST['position'];
+    $department = $_POST['department'];
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    //echo $username ."-".$useremail."-".$password."-".$userrole;
+
+    if (isset($_POST['email']) or isset($_POST['username'])) {
+
+        $select = $pdo->prepare("SELECT email from user_list where email='$email'");
+        $select->execute();
+
+        if ($select->rowCount() > 0) {
+
+            $_SESSION['message'] = "Email already exist";
+        }
+        $select = $pdo->prepare("SELECT username from user_list where username='$username'");
+        $select->execute();
+        if ($select->rowCount() > 0) {
+            $_SESSION['message'] = "Username already exist";
+        } else {
+
+
+            $insert = $pdo->prepare("INSERT into user_list(username,email,password,position) values(:name,:email,:pass,:position)");
+
+            $insert->bindParam(':name', $username);
+            $insert->bindParam(':email', $email);
+            $insert->bindParam(':pass', $hashedPassword);
+            $insert->bindParam(':position', $position);
+
+
+            if ($insert->execute()) {
+
+                $select = $pdo->prepare("SELECT id FROM user_list WHERE username='$username'");
+                $select->execute();
+
+                while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
+                    $id = $row['id'];
+                }
+
+                if ($_POST['position'] == 'Student') {
+                    $insert = $pdo->prepare("INSERT into student_list(student_id ,student_firstname,student_middlename ,student_lastname, department ) values(:id, :firstname, :middlename, :lastname, :department)");
+
+                    $insert->bindParam(':id', $id);
+                    $insert->bindParam(':firstname', $firstname);
+                    $insert->bindParam(':middlename', $middlename);
+                    $insert->bindParam(':lastname', $lastname);
+                    $insert->bindParam(':department', $department);
+                    $insert->execute();
+
+                    $insertLog = $pdo->prepare("INSERT INTO user_log(user_id, user, action, log_date, log_time) values(:id, :user, :action, :logDate, :logTime)");
+
+                    $insertLog->bindParam(':id', $id);
+                    $insertLog->bindParam(':user', $username);
+                    $insertLog->bindParam(':action', $action);
+                    $insertLog->bindParam(':logDate', $d);
+                    $insertLog->bindParam(':logTime', $t);
+                    $insertLog->execute();
+
+                    $_SESSION['status'] =  "asuccess";
+                    header('LOCATION: manage_student.php');
+                } else if ($_POST['position'] == 'Instructor') {
+                    $insert = $pdo->prepare("INSERT into teacher_list(teacher_id ,teacher_firstname,teacher_middlename ,teacher_lastname, department ) values(:id, :firstname, :middlename, :lastname, :department)");
+
+                    $insert->bindParam(':id', $id);
+                    $insert->bindParam(':firstname', $firstname);
+                    $insert->bindParam(':middlename', $middlename);
+                    $insert->bindParam(':lastname', $lastname);
+                    $insert->bindParam(':department', $department);
+                    $insert->execute();
+
+                    $insertLog = $pdo->prepare("INSERT INTO user_log(user_id, user, action, log_date, log_time) values(:id, :user, :action, :logDate, :logTime)");
+
+                    $insertLog->bindParam(':id', $id);
+                    $insertLog->bindParam(':user', $username);
+                    $insertLog->bindParam(':action', $action);
+                    $insertLog->bindParam(':logDate', $d);
+                    $insertLog->bindParam(':logTime', $t);
+                    $insertLog->execute();
+
+                    $_SESSION['status'] =  "asuccess";
+                    header('LOCATION: manage_student.php');
+                }
+            } else { ?>
+
+                <script type="text/javascript">
+                    jQuery(function validation() {
+
+
+                        swal({
+                            title: "Error!",
+                            text: "Registration Fail !!!",
+                            icon: "error",
+                            button: "Ok",
+                        });
+
+
+                    });
+                </script>
+<?php
+            }
+        }
+    } // end if txtemail
+
+
+
+
+}

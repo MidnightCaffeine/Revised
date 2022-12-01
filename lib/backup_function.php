@@ -173,7 +173,7 @@ $page = "backup";
 				define("DB_USER", 'root');
 				define("DB_PASSWORD", '');
 				define("DB_NAME", 'rfid_attendance');
-				define("DB_HOST", '127.0.0.1:3307');
+				define("DB_HOST", 'localhost');
 				define("BACKUP_DIR", 'myphp-backup-files'); // Comment this line to use same script's directory ('.')
 				define("TABLES", '*'); // Full backup
 				//define("TABLES", 'table1, table2, table3'); // Partial backup

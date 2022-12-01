@@ -82,6 +82,8 @@ if (isset($_POST['btn_login'])) {
                         header('refresh:1;home.php');
                     }elseif($_SESSION['position'] == 'Student'){
                         header('refresh:1;student_dashboard.php');
+                    }elseif($_SESSION['position'] == 'Instructor'){
+                        header('refresh:1;instructor_dash.php');
                     }
         }
     } else {

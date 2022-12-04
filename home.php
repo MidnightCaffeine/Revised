@@ -4,6 +4,12 @@ session_start();
 $d = date("Y-m-d");
 $t = date("h:i:s A");
 $page = "home";
+if (!isset($_SESSION['username'])) {
+	session_unset();
+	session_write_close();
+	session_destroy();
+	header("Location: index.php");
+ }
 
 ?>
 
@@ -86,7 +92,7 @@ $page = "home";
                   <div class="col-xxl-4 col-md-6">
                      <div class="card info-card revenue-card">
                         <div class="card-body">
-                           <h5 class="card-title">Total Instructors</span></h5>
+                           <h5 class="card-title">Total Faculty Staff</span></h5>
                            <?php
                            $countInstructor = $pdo->prepare("SELECT * FROM `teacher_list`");
                            $countInstructor->execute();

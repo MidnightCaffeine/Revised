@@ -3,6 +3,13 @@ session_start();
 include 'lib/instructor/addTeacher.php';
 $page = "manage_teacher";
 
+if (!isset($_SESSION['username'])) {
+	session_unset();
+	session_write_close();
+	session_destroy();
+	header("Location: index.php");
+ }
+
 ?>
 
 <!DOCTYPE html>

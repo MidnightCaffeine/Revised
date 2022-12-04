@@ -3,7 +3,12 @@
 $page = "add_student";
 include_once 'lib/connection.php';
 session_start();
-
+if (!isset($_SESSION['username'])) {
+	session_unset();
+	session_write_close();
+	session_destroy();
+	header("Location: index.php");
+ }
 include 'lib/student/addStudent.lib.php';
 ?>
 <!DOCTYPE html>
@@ -120,21 +125,6 @@ include 'lib/student/addStudent.lib.php';
 					<a type="button" class="btn btn-primary ms-auto mb-2" href="manage_student.php"><i class='bx bx-arrow-back'></i> Back</a>
 				</div>
 
-				<div class="card mt-3">
-					<div class="card-body">
-						<div class="mt-3">
-							<form id="importStudent" action="import.php" method="post" enctype="multipart/form-data">
-								<div class="mb-2">
-									<label for="importFile" class="form-label">Import from spreadsheet</label>
-									<div class="input-group">
-										<input type="file" name="import_file" class="form-control" id="import_file" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-										<button name="save_exel_data" class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Button</button>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
 				<div class="card">
 					<div class="card-body">
 						<h5 class="mt-3">Provide details manually</h5>

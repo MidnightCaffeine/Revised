@@ -2,6 +2,13 @@
 session_start();
 $page = "attendance_student";
 
+if (!isset($_SESSION['username'])) {
+   session_unset();
+   session_write_close();
+   session_destroy();
+   header("Location: index.php");
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +17,7 @@ $page = "attendance_student";
 <head>
    <meta charset="utf-8">
    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-   <title>Home</title>
+   <title>Students Attendance</title>
    <meta name="robots" content="noindex, nofollow">
    <meta content="" name="description">
    <meta content="" name="keywords">
@@ -69,13 +76,96 @@ $page = "attendance_student";
       </div>
       <section class="section dashboard">
          <div class="row">
-            <div class="d-flex align-items-center mt-3 mb-2">
+            <?php
+            if ($_SESSION['position'] == 'student') {
+            } else { ?>
+               <div class="input-group me-auto ms-auto">
+                  <form action="" method="GET">
+                     <div class="d-flex align-items-center mt-3 mb-2">
+                        <select name="department" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
+                           <option value="" <?php if (isset($_GET['department']) && $_GET['department'] == '') {
+                                                echo 'selected';
 
-               <!-- add trigger modal -->
-               <button type="button" class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#addStudent">Export</button>
+                                                unset($_SESSION['sdept']);
+                                             } ?>>department</option>
+                           <option value="BSIT" <?php if (isset($_GET['department']) && $_GET['department'] == 'BSIT') {
+                                                   echo 'selected';
 
-            </div>
-            <div id="studentAttendanceTable"></div>
+                                                   $_SESSION['sdept'] = $_GET['department'];
+                                                } ?>>BSIT</option>
+                        </select>
+
+                        <select name="section" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
+                           <option value="" <?php if (isset($_GET['section']) && $_GET['section'] == '') {
+                                                echo 'selected';
+
+                                                unset($_SESSION['ssect']);
+                                             } ?>>section</option>
+                           <option value="AP" <?php if (isset($_GET['section']) && $_GET['section'] == 'AP') {
+                                                   echo 'selected';
+                                                   $_SESSION['ssect'] = $_GET['section'];
+                                                } ?>>AP</option>
+                           <option value="A" <?php if (isset($_GET['section']) && $_GET['section'] == 'A') {
+                                                echo 'selected';
+                                                $_SESSION['ssect'] = $_GET['section'];
+                                             } ?>>A</option>
+                           <option value="B" <?php if (isset($_GET['section']) && $_GET['section'] == 'B') {
+                                                echo 'selected';
+                                                $_SESSION['ssect'] = $_GET['section'];
+                                             } ?>>B</option>
+                        </select>
+
+                        <select name="yearLevel" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
+                           <option value="" <?php if (isset($_GET['yearLevel']) && $_GET['yearLevel'] == '') {
+                                                echo 'selected';
+
+                                                unset($_SESSION['ssy']);
+                                             } ?>>Year Level</option>
+                           <option value="1" <?php if (isset($_GET['yearLevel']) && $_GET['yearLevel'] == '1') {
+                                                echo 'selected';
+                                                $_SESSION['ssy'] = 1;
+                                             } ?>>1st Year</option>
+                           <option value="2" <?php if (isset($_GET['yearLevel']) && $_GET['yearLevel'] == '2') {
+                                                echo 'selected';
+                                                $_SESSION['ssy'] = 2;
+                                             } ?>>2nd Year</option>
+                           <option value="3" <?php if (isset($_GET['yearLevel']) && $_GET['yearLevel'] == '3') {
+                                                echo 'selected';
+                                                $_SESSION['ssy'] = 3;
+                                             } ?>>3rd Year</option>
+                           <option value="4th" <?php if (isset($_GET['yearLevel']) && $_GET['yearLevel'] == '4th') {
+                                                   echo 'selected';
+                                                   $_SESSION['ssy'] = 4;
+                                                } ?>>4th Year</option>
+                        </select>
+
+                        <select name="subject" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
+                           <option value="" <?php if (isset($_GET['subject']) && $_GET['subject'] == '') {
+                                                echo 'selected';
+                                                unset($_SESSION['ssub']);
+                                             } ?>>subject</option>
+                           <option value="Programming" <?php if (isset($_GET['subject']) && $_GET['subject'] == 'Programming') {
+                                                            echo 'selected';
+                                                            $_SESSION['ssub'] = $_GET['subject'];
+                                                         } ?>>Programming</option>
+                           <option value="Capstone" <?php if (isset($_GET['subject']) && $_GET['subject'] == 'Capstone') {
+                                                         echo 'selected';
+                                                         $_SESSION['ssub'] = $_GET['subject'];
+                                                      } ?>>Capstone</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                  </form>
+               </div>
+            <?php
+            }
+
+            ?>
+
+         </div>
+         <div>
+            <a type="button" class="btn btn-success mb-3" href="lib/student/exportAttendance.php"><i class='bx bx-download'></i> Export</a>
+         </div>
+         <div id="studentAttendanceTable"></div>
          </div>
       </section>
    </main>
@@ -180,6 +270,11 @@ $page = "attendance_student";
    <script src="assets/js/quill.min.js"></script>
    <script src="assets/js/tinymce.min.js"></script>
    <script src="assets/js/main.js"></script>
+   <script>
+      $(function() {
+         $('#datepicker').datepicker();
+      });
+   </script>
 
 </body>
 

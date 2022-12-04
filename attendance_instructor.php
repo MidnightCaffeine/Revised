@@ -2,6 +2,13 @@
 session_start();
 $page = "attendance_instuctor";
 
+if (!isset($_SESSION['username'])) {
+	session_unset();
+	session_write_close();
+	session_destroy();
+	header("Location: index.php");
+ }
+
 ?>
 
 <!DOCTYPE html>
@@ -86,8 +93,7 @@ $page = "attendance_instuctor";
          <div class="row">
             <div class="d-flex align-items-center mt-3 mb-2">
 
-               <!-- add trigger modal -->
-               <button type="button" class="btn btn-success ms-auto" name="exportInstructorAttendance">Export</button>
+            <a type="button" class="btn btn-primary ms-auto mb-2" href="lib/instructor/exportAttendance.php"><i class='bx bx-download'></i> Export</a>
 
             </div>
             <div id="instructorTable"></div>

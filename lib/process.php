@@ -94,47 +94,16 @@ while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
 
 		$select = $pdo->prepare("SELECT * from attendance_instructor where fullname='$fullname' AND date_in='$d' AND time_out='0' ");
 		$select->execute();
+		echo "success";
 
 		if ($select->rowCount() > 0) { //logout
 			while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
 				$ids = $row["id"];
 			}
 			$update = $pdo->prepare("UPDATE `attendance_instructor` SET `time_out` = '$t' WHERE `attendance_instructor`.`fullname` = '$fullname' AND `date_in` = '$d' AND `id` = '$ids' ");
-			if ($update->execute()) {
-				$selectAbsent = $pdo->prepare("SELECT * FROM student_list");
-				$selectAbsent->execute();
-				while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
-					$ids = $row["id"];
-
-					$slname = $row["student_firstname"];
-					$smname = $row["student_middlename"];
-					$ssname = $row["student_lastname"];
-
-					$studentName = $slname . " " . $smname . " " . $ssname;
-
-					$getAttendanceList = $pdo->prepare("SELECT * FROM attendance WHERE fullname='$studentName' AND date_in='$d' AND time_out='0'");
-					$getAttendanceList->execute();
-
-					if ($getAttendanceList->rowCount() < 0) {
-
-						$d = 0;
-
-						$insert = $pdo->prepare("INSERT INTO `attendance`(`fullname`, `date_in`, `time_in`,`time_out`,`remark`,`instructor`) VALUES (:fullname, :d, :t, '0',:remark,:instructor)");
-						$insert->bindParam(":fullname", $studentName);
-						$insert->bindParam(":d", $d);
-						$insert->bindParam(":t", $d);
-						$insert->bindParam(":remark", $remark[2]);
-						$insert->bindParam(":instructor", $fullname);
-						$insert->execute();
-					} elseif (($getAttendanceList->rowCount() > 0)) {
-
-						$update = $pdo->prepare("UPDATE `attendance` SET `time_out` = '$t' WHERE `attendance`.`fullname` = '$studentName' AND `date_in` = '$d'");
-						$update->execute();
-					} else {
-						echo "success";
-					}
-				}
-			}
+			$update->execute();
+			echo "success";
+			
 		} else { //login
 			$insert = $pdo->prepare("INSERT INTO `attendance_instructor`(`fullname`, `date_in`, `time_in`, `time_out`) VALUES (:fullname, :d, :t, '0')");
 			$insert->bindParam(":fullname", $fullname);
@@ -142,12 +111,6 @@ while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
 			$insert->bindParam(":t", $t);
 			$insert->execute();
 
-			$selectStudents = $pdo->prepare("SELECT phone from student_list ");
-			if ($selectStudents->execute()) {
-				while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
-					$phone = $row["phone"];
-				}
-			}
 			echo "success";
 		}
 	}

@@ -1,7 +1,12 @@
 <?php
 session_start();
 $page = "edit_instructor";
-
+if (!isset($_SESSION['username'])) {
+	session_unset();
+	session_write_close();
+	session_destroy();
+	header("Location: index.php");
+ }
 // include database connection file
 include_once("lib/connection.php");
 
